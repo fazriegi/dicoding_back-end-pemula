@@ -1,0 +1,802 @@
+{
+	"info": {
+		"_postman_id": "54daef7a-e913-4fb4-a6a3-38befab5da21",
+		"name": "dicoding notes app test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27861526"
+	},
+	"item": [
+		{
+			"name": "add notes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Pastikan response memiliki status code 201.\r",
+							"// 2. Pastikan header response Content-Type memiliki nilai application/json.\r",
+							"// 3. Pastikan body response adalah object.\r",
+							"// 4. Pastikan body response memiliki properti dan nilai yang sesuai.\r",
+							"// 5. Pastikan data pada response body memiliki noteId dan nilainya tidak kosong.\r",
+							"\r",
+							"\r",
+							"pm.test('response status code should have 201 value', () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Catatan berhasil ditambahkan');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('data');\r",
+							"    pm.expect(responseJson.data).to.be.an('object')\r",
+							"})\r",
+							"\r",
+							"pm.test('response body data should have noteId property and not equal to empty', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const {data} = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.ownProperty('noteId');\r",
+							"    pm.expect(data.noteId).to.not.equals('');\r",
+							"\r",
+							"    pm.environment.set('noteId', data.noteId);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"title\": \"Catatan A\",\r\n   \"tags\": [\"Android\", \"Web\"],\r\n   \"body\": \"Isi dari Catatan A\"\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes"
+					],
+					"query": [
+						{
+							"key": "cnt",
+							"value": "5",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add notes",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Catatan A\",\r\n    \"tags\": [\"Android\", \"Web\"],\r\n    \"body\": \"Isi dari catatan A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/notes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes"
+							],
+							"query": [
+								{
+									"key": "cnt",
+									"value": "5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "98"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:07:17 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil ditambahkan\",\n    \"data\": {\n        \"noteId\": \"KqxJRFVyKIke_cl1\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get all notes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Pastikan response memiliki status code 200.\r",
+							"// 2. Pastikan header response Content-Type memiliki nilai application/json.\r",
+							"// 3. Pastikan body response adalah object.\r",
+							"// 4. Pastikan body response memiliki properti dan nilai atau tipe data yang sesuai.\r",
+							"// 5. Pastikan data pada response body memiliki array notes dan terdapat minimal 1 item di dalamnya.\r",
+							"\r",
+							"\r",
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('data');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have a notes array and contain at least 1 item', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const {data} = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.have.ownProperty('notes');\r",
+							"    pm.expect(data.notes).to.be.an('array');\r",
+							"    pm.expect(data.notes).lengthOf.at.least(1);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get all notes",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/notes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "216"
+						},
+						{
+							"key": "accept-ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:07:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"notes\": [\n            {\n                \"id\": \"KqxJRFVyKIke_cl1\",\n                \"title\": \"Catatan A\",\n                \"tags\": [\n                    \"Android\",\n                    \"Web\"\n                ],\n                \"body\": \"Isi dari catatan A\",\n                \"createdAt\": \"2023-10-08T10:07:17.958Z\",\n                \"updatedAt\": \"2023-10-08T10:07:17.958Z\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "get note by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Pastikan response memiliki status code 200.\r",
+							"// 2. Pastikan header response Content-Type memiliki nilai application/json.\r",
+							"// 3. Pastikan body response merupakan object.\r",
+							"// 4. Pastikan body response memiliki properti dan nilai atau tipe data yang sesuai.\r",
+							"// 5. Pastikan data pada response body memiliki properti note yang merupakan sebuah objek.\r",
+							"// 6. Pastikan objek note di dalam data memiliki properti id, title, body, dan tags dengan nilai yang sesuai.\r",
+							"\r",
+							"\r",
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('data');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body data should contain note object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const {data} = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.have.ownProperty('note');\r",
+							"    pm.expect(data.note).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body data should contain correct value for id, title, body, and tags property', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const {data: {note}} = responseJson;\r",
+							"\r",
+							"    const expectedId = pm.environment.get('noteId');\r",
+							"    const expectedTitle = 'Catatan A';\r",
+							"    const expectedTags = ['Android', 'Web'];\r",
+							"    const expectedBody = 'Isi dari Catatan A';\r",
+							"\r",
+							"    pm.expect(note).to.have.ownProperty('id');\r",
+							"    pm.expect(note.id).to.equals(expectedId);\r",
+							"\r",
+							"    pm.expect(note).to.have.ownProperty('title');\r",
+							"    pm.expect(note.title).to.equals(expectedTitle);\r",
+							"\r",
+							"    pm.expect(note).to.have.ownProperty('tags');\r",
+							"    pm.expect(note.tags).to.eql(expectedTags);\r",
+							"\r",
+							"    pm.expect(note).to.have.ownProperty('body');\r",
+							"    pm.expect(note.body).to.equals(expectedBody);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/notes/{{noteId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						"{{noteId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get note by id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/notes/KqxJRFVyKIke_cl1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								"KqxJRFVyKIke_cl1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "213"
+						},
+						{
+							"key": "accept-ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:08:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"note\": {\n            \"id\": \"KqxJRFVyKIke_cl1\",\n            \"title\": \"Catatan A\",\n            \"tags\": [\n                \"Android\",\n                \"Web\"\n            ],\n            \"body\": \"Isi dari catatan A\",\n            \"createdAt\": \"2023-10-08T10:07:17.958Z\",\n            \"updatedAt\": \"2023-10-08T10:07:17.958Z\"\n        }\n    }\n}"
+				},
+				{
+					"name": "not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/notes/KqxJRFVyKIke_cl",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								"KqxJRFVyKIke_cl"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "53"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:09:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"fail\",\n    \"message\": \"Catatan tidak ditemukan\"\n}"
+				}
+			]
+		},
+		{
+			"name": "edit note",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Pastikan response memiliki status code 200.\r",
+							"// 2. Pastikan header response Content-Type memiliki nilai application/json.\r",
+							"// 3. Pastikan body response adalah object.\r",
+							"// 4. Pastikan body response memiliki properti dan nilai yang sesuai.\r",
+							"// 5. Ketika mengakses catatan yang diperbaharui\r",
+							"// Pastikan catatan yang diperbarui memiliki nilai terbaru.\r",
+							"\r",
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Catatan berhasil diperbarui');\r",
+							"})\r",
+							"\r",
+							"pm.test('when request the updated note', () => {\r",
+							"    const noteId = pm.environment.get('noteId');\r",
+							"\r",
+							"    pm.sendRequest(`http://localhost:5000/notes/${noteId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('then the updated note should contain the latest data', () => {\r",
+							"                const responseJson = response.json();\r",
+							"                const {data: {note}} = responseJson;\r",
+							"\r",
+							"                const expectedTitle = 'Catatan A revisi';\r",
+							"                const expectedTags = ['Android', 'Web'];\r",
+							"                const expectedBody = 'Isi dari Catatan A revisi';\r",
+							"\r",
+							"                pm.expect(note.title).to.equals(expectedTitle);\r",
+							"                pm.expect(note.tags).to.eql(expectedTags);\r",
+							"                pm.expect(note.body).to.equals(expectedBody);\r",
+							"            })\r",
+							"        }\r",
+							"    })\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Catatan A revisi\",\r\n    \"tags\": [\"Android\", \"Web\"],\r\n    \"body\": \"Isi dari Catatan A revisi\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/notes/{{noteId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						"{{noteId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "edit note",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Catatan A revisi\",\r\n    \"tags\": [\"Android\", \"Web\"],\r\n    \"body\": \"Isi dar catatan A revisi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/notes/KqxJRFVyKIke_cl1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								"KqxJRFVyKIke_cl1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "60"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:11:03 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil diperbarui\"\n}"
+				}
+			]
+		},
+		{
+			"name": "delete note",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Pastikan response memiliki status code 200.\r",
+							"// 2. Pastikan header response Content-Type memiliki nilai application/json.\r",
+							"// 3. Pastikan body response adalah object.\r",
+							"// 4. Pastikan body response memiliki properti dan nilai yang sesuai.\r",
+							"// 5. Ketika mengakses catatan yang dihapus\r",
+							"// Pastikan catatan yang dihapus tidak ditemukan.\r",
+							"\r",
+							"\r",
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"})\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseJson).to.haveOwnProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Catatan berhasil dihapus');\r",
+							"})\r",
+							"\r",
+							"pm.test('when request the deleted note', () => {\r",
+							"    const noteId = pm.environment.get('noteId');\r",
+							"    pm.sendRequest(`http://localhost:5000/notes/${noteId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('the deleted note should be not found', () => {\r",
+							"                pm.expect(response.code).to.equals(404)\r",
+							"\r",
+							"                const responseJson = response.json();\r",
+							"                pm.expect(responseJson.status).to.equals('fail');\r",
+							"                pm.expect(responseJson.message).to.equals('Catatan tidak ditemukan');\r",
+							"            })\r",
+							"        }\r",
+							"   });\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/notes/{{noteId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"notes",
+						"{{noteId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete note",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/notes/KqxJRFVyKIke_cl1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notes",
+								"KqxJRFVyKIke_cl1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "vary",
+							"value": "origin"
+						},
+						{
+							"key": "access-control-expose-headers",
+							"value": "WWW-Authenticate,Server-Authorization"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-cache"
+						},
+						{
+							"key": "content-length",
+							"value": "57"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 08 Oct 2023 10:11:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Catatan berhasil dihapus\"\n}"
+				}
+			]
+		}
+	]
+}
